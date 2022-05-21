@@ -37,6 +37,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/login")
                 .permitAll();
 
+        // Redirect to Home page if login successfully
         http.formLogin()
                 .defaultSuccessUrl("/home", true);
     }

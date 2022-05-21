@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller()
 @RequestMapping("/signup")
@@ -16,6 +17,9 @@ public class SignupController {
     //=====================================================
     //                                             CONSTANT
     //                                             ========
+    private static final String USER_EXIST_MESSAGE        = "The username already exists.";
+    private static final String SIGNUP_SUCCESS_MESSAGE    = "You successfully signed up!";
+    private static final String SIGNUP_ERROR_MESSAGE      = "There was an error signing you up. Please try again.";
 
     /** */
 
@@ -50,22 +54,22 @@ public class SignupController {
      * @return : Screen Sign-up if signup fail. Screen Login if signup success.
      */
     @PostMapping()
-    public String signupUser(@ModelAttribute User user, Model model) {
+    public String signupUser(@ModelAttribute User user, Model model, RedirectAttributes redirectAttrs) {
         String signupError = null;
 
         if (!userService.isUsernameAvailable(user.getUsername())) {
-            signupError = "The username already exists.";
+            signupError = USER_EXIST_MESSAGE;
         }
 
         if (signupError == null) {
             int rowsAdded = userService.createUser(user);
             if (rowsAdded < 0) {
-                signupError = "There was an error signing you up. Please try again.";
+                signupError = SIGNUP_ERROR_MESSAGE;
             }
         }
 
         if (signupError == null) {
-            model.addAttribute("signupSuccess", true);
+            redirectAttrs.addFlashAttribute("message", SIGNUP_SUCCESS_MESSAGE);
             return "redirect:/login";
         } else {
             model.addAttribute("signupError", signupError);

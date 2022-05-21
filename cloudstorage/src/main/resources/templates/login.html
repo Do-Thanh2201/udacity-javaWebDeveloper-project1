@@ -1,3 +1,5 @@
+<!--/* Login.html */-->
+
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
     <head>
@@ -11,6 +13,11 @@
     <body class="p-3 mb-2 bg-light text-black">
         <div class="container justify-content-center w-25 p-3" style="background-color: #eeeeee; margin-top: 5em;">
             <h1 class="display-5">Login</h1>
+
+            <!--/* Message from SignupController when User signup successfully */-->
+            <div id="success-msg" th:if="${message}" class="alert alert-success">
+                <div th:text="${message}"></div>
+            </div>
 
             <form action="#" th:action="@{/login}" method="POST">
                 <div id="error-msg" th:if="${param.error}" class="alert alert-danger">
