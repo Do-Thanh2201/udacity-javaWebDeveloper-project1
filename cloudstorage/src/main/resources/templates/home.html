@@ -11,16 +11,14 @@
     <body class="p-3 mb-2 bg-light text-black">
         <div class="container">
 
-            <!--/* =====================================
-                                                Log out
-             =======================================*/-->
+            <!--/* ===============================================
+                                                           Log out
+             ================================================*/-->
             <div id="logoutDiv">
                 <form action="#" method="POST" th:action="@{'/logout'}">
                     <button type="submit" class="btn btn-secondary float-right">Logout</button>
                 </form>
             </div>
-            <!--/* This code will be set up list tab-content */-->
-
             <div id="contentDiv" style="clear: right;">
                 <nav style="clear: right;">
                     <div class="nav nav-tabs" id="nav-tab" role="tablist">
@@ -36,8 +34,11 @@
                      ==============================================*/-->
                     <div class="tab-pane fade show active" id="nav-files" role="tabpanel" aria-labelledby="nav-files-tab">
 
+                       <!-- Message is send from FileController/ NoteController/ CredentialController -->
+                        <p th:text="${message}" th:if="${message ne null}" class="alert alert-primary"></p>
+
                         <!--/* Upload file */-->
-                        <form action="#" enctype="multipart/form-data" method="POST" th:action="@{'/upload'}">
+                        <form action="#" enctype="multipart/form-data" th:method="POST" th:action="@{'/file'}">
                             <div class="container">
                                 <div class="row" style="margin: 1em;">
                                     <div class="col-sm-2">
@@ -63,13 +64,20 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td>
-                                        <a target="_blank" class="btn btn-success">View</a>
-                                        <a  class="btn btn-danger">Delete</a>
-                                    </td>
-                                    <th scope="row">ExampleFile.txt</th>
-                                </tr>
+                                <!-- View list -->
+                                    <tr th:if="${fileList.isEmpty()}">
+                                        <td colspan="2"> No Files Available </td>
+                                    </tr>
+                                    <tr th:each="file : ${fileList}">
+                                        <td>
+                                            <a target="_blank" class="btn btn-success">View</a>
+                                            <a th:href="@{/file/delete/(fileId=${file.fileId})}"  class="btn btn-danger">Delete</a>
+                                        </td>
+                                        <th scope="row">
+                                            <span th:text="${file.fileName}"></span>
+                                        </th>
+                                    </tr>
+
                                 </tbody>
                             </table>
                         </div>
@@ -92,14 +100,33 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
+
+                                <!-- View list -->
+                                <tr th:if="${noteList.isEmpty()}">
+                                    <td colspan="2"> No Notes Available </td>
+                                </tr>
+                                <tr th:each="note : ${noteList}">
+                                    <td>
+                                        <button type="button" class="btn btn-success">Edit</button>
+                                        <a th:href="@{/note/delete/(noteId=${note.noteId})}" class="btn btn-danger">Delete</a>
+                                    </td>
+                                    <th scope="row">
+                                        <span th:text="${note.noteTitle}"></span>
+                                    </th>
+                                    <td>
+                                        <span th:text="${note.noteDescription}"></span>
+                                    </td>
+                                </tr>
+
+                               <!-- <tr>
                                         <td>
                                             <button type="button" class="btn btn-success">Edit</button>
-                                            <a class="btn btn-danger">Delete</a>
+                                            <a th:href="@{/note/delete/(noteId=${note.fileId})}" class="btn btn-danger">Delete</a>
                                         </td>
                                         <th scope="row">Example Note Title</th>
                                         <td>Example Note Description </td>
-                                    </tr>
+                                    </tr>-->
+
                                 </tbody>
                             </table>
                         </div>
@@ -114,8 +141,10 @@
                                         </button>
                                     </div>
                                     <div class="modal-body">
-                                        <form action="#" method="POST">
-                                            <input type="hidden" name="noteId" id="note-id">
+
+                                        <!--Save the note to the database-->
+                                        <form action="#" th:action="@{'/note'}" th:object="${note}" method="POST" >
+                                            <!--<input type="hidden" name="noteId" id="note-id">-->
                                             <div class="form-group">
                                                 <label for="note-title" class="col-form-label">Title</label>
                                                 <input type="text" name= "noteTitle" class="form-control" id="note-title" maxlength="20" required>
@@ -127,10 +156,12 @@
                                             <button id="noteSubmit" type="submit" class="d-none"></button>
                                         </form>
                                     </div>
+                                    <!--Save the note to the database-->
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                                         <button type="button" class="btn btn-primary" onclick="$('#noteSubmit').click();">Save changes</button>
                                     </div>
+
                                 </div>
                             </div>
                         </div>

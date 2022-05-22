@@ -19,6 +19,11 @@
                 <div th:text="${message}"></div>
             </div>
 
+            <!-- Message From HomeController/ FileController/ NoteController/ CredentialController require login -->
+            <div id="info-msg" th:if="${loginMessage}" class="alert alert-success">
+                <div th:text="${loginMessage}"></div>
+            </div>
+
             <form action="#" th:action="@{/login}" method="POST">
                 <div id="error-msg" th:if="${param.error}" class="alert alert-danger">
                     Invalid username or password
