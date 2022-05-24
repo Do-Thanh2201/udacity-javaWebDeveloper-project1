@@ -1,7 +1,7 @@
 package com.udacity.jwdnd.course1.cloudstorage.controller;
 
 import com.udacity.jwdnd.course1.cloudstorage.model.Note;
-import com.udacity.jwdnd.course1.cloudstorage.model.NoteDTO;
+import com.udacity.jwdnd.course1.cloudstorage.dto.NoteDTO;
 import com.udacity.jwdnd.course1.cloudstorage.services.NoteService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
 import org.springframework.stereotype.Controller;
@@ -25,16 +25,22 @@ public class NoteController {
     /** Empty Uploaded Note message */
     private static final String EMPTY_NOTE_MESSAGE             = "Please fill a note to save.";
 
-    /** Upload file successfully message */
-    private static final String SAVE_NOTE_SUCCESS_MESSAGE    = "You successfully save the note!";
+    /** Create Note successfully message */
+    private static final String CREATE_NOTE_SUCCESS_MESSAGE = "You successfully create the note!";
+
+    /** Update Note successfully message */
+    private static final String UPDATE_NOTE_SUCCESS_MESSAGE    = "You successfully update the note!";
 
     /** Delete Note successfully message */
     private static final String DELETE_NOTE_SUCCESS_MESSAGE    = "You successfully delete the note!";
 
-    /** Save note error message */
-    private static final String SAVE_NOTE_ERROR_MESSAGE      = "An error occurred while saving the file!";
+    /** Create note error message */
+    private static final String CREATE_NOTE_ERROR_MESSAGE = "An error occurred while Create the note!";
 
-    /** Upload file error message */
+    /** Update note error message */
+    private static final String UPDATE_NOTE_ERROR_MESSAGE      = "An error occurred while updating the note!";
+
+    /** Delete note error message */
     private static final String DELETE_NOTE_ERROR_MESSAGE      = "An error occurred while deleting the note!";
 
 
@@ -67,13 +73,15 @@ public class NoteController {
         return "redirect:/home";
     }
 
+
+
     /**
-     * Screen Add new the Note
+     * Screen Add new / update the Note
      *
      * @return Screen Homepage
      */
     @PostMapping()
-    public String addNote(@ModelAttribute("note") NoteDTO noteDTO, RedirectAttributes redirectAttrs) {
+    public String updateNote(@ModelAttribute("note") NoteDTO noteDTO, RedirectAttributes redirectAttrs) {
 
         // Check if file is empty
         if (noteDTO == null) {
@@ -82,29 +90,31 @@ public class NoteController {
             return "redirect:/home";
         }
 
-        Note note = noteService.setToNote(noteDTO.getNoteTitle(), noteDTO.getNoteDescription(), userService.getUserID());
+        // Get userId
 
-        if (!noteService.insert(note)) {
+        Integer userId;
+        try {
+            userId = userService.getUserID();
+        }
+        catch (Exception e) {
+            redirectAttrs.addFlashAttribute("message", UserService.NOT_EXIST_USER_MESSAGE);
+            return "redirect:/login";
+        }
 
-            // return error response
-            redirectAttrs.addFlashAttribute("message", SAVE_NOTE_ERROR_MESSAGE);
+        // Check if noteId != 0 then edit the note
+        if (noteDTO.getNoteId() != 0 ) {
+
+            // Edit the Note
+            editNote(noteDTO, userId, redirectAttrs);
             return "redirect:/home";
-        };
+        }
 
-        redirectAttrs.addFlashAttribute("message", SAVE_NOTE_SUCCESS_MESSAGE);
+        // Else Create a new Note
+        createNote(noteDTO, userId, redirectAttrs);
 
         return "redirect:/home";
     }
 
-    /**
-     * Screen Edit the Note
-     *
-     * @return Screen Homepage
-     */
-    @PutMapping()
-    public String editNote() {
-        return "redirect:/home";
-    }
 
     /**
      * Screen delete the Note
@@ -129,5 +139,47 @@ public class NoteController {
     //                                      INTERNAL METHOD
     //                                             ========
 
+    /**
+     * Edit the Note
+     *
+     * @param noteDTO: Note information
+     * @param redirectAttrs: Set message for redirect
+     */
+    public void editNote(NoteDTO noteDTO, int userId, RedirectAttributes redirectAttrs) {
+
+        Note note = noteService.setToNote(noteDTO.getNoteTitle(), noteDTO.getNoteDescription(),userId);
+
+        note.setNoteId(noteDTO.getNoteId());
+
+        if (!noteService.edit(note)) {
+
+            // return error response
+            redirectAttrs.addFlashAttribute("message", UPDATE_NOTE_ERROR_MESSAGE);
+            return;
+        };
+
+        redirectAttrs.addFlashAttribute("message", UPDATE_NOTE_SUCCESS_MESSAGE);
+    }
+
+    /**
+     * Create the Note
+     *
+     * @param noteDTO: Note information
+     * @param redirectAttrs: Set message for redirect
+     */
+    public void createNote(NoteDTO noteDTO, int userId, RedirectAttributes redirectAttrs) {
+
+
+        Note note = noteService.setToNote(noteDTO.getNoteTitle(), noteDTO.getNoteDescription(), userId);
+
+        if (!noteService.insert(note)) {
+
+            // return error response
+            redirectAttrs.addFlashAttribute("message", CREATE_NOTE_ERROR_MESSAGE);
+            return;
+        };
+
+        redirectAttrs.addFlashAttribute("message", CREATE_NOTE_SUCCESS_MESSAGE);
+    }
 
 }

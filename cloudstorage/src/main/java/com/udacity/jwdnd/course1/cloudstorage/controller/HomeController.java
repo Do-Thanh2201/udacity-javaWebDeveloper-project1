@@ -1,6 +1,7 @@
 package com.udacity.jwdnd.course1.cloudstorage.controller;
 
 
+import com.udacity.jwdnd.course1.cloudstorage.dto.CredentialDTO;
 import com.udacity.jwdnd.course1.cloudstorage.model.Credential;
 import com.udacity.jwdnd.course1.cloudstorage.model.File;
 import com.udacity.jwdnd.course1.cloudstorage.model.Note;
@@ -69,8 +70,12 @@ public class HomeController {
     @GetMapping()
     public String getHomePage(Model model, RedirectAttributes redirectAttrs) {
 
-        Integer userId = userService.getUserID();
-        if (userId == null) {
+        Integer userId;
+        try {
+            userId = userService.getUserID();
+        }
+        catch (Exception e) {
+            redirectAttrs.addFlashAttribute("message", UserService.NOT_EXIST_USER_MESSAGE);
             return "redirect:/login";
         }
 
@@ -81,7 +86,7 @@ public class HomeController {
         List<Note> noteList = noteService.getListNote(userId);
 
         // Get the list Credentials
-        List<Credential> credentialList = credentialService.getListCredential(userId);
+        List<CredentialDTO> credentialList = credentialService.getListCredential(userId);
 
         // Send value to Thymeleaf
         Map<String, Object> map = new HashMap<>();

@@ -49,6 +49,23 @@ public interface NoteMapper {
     boolean insert(Note note);
 
     /**
+     * Update the Note to the database
+     *
+     * @param: Note
+     *
+     * @return true if update successfully
+     */
+    @Update("UPDATE NOTES " +
+            "SET " +
+            "notetitle = #{noteTitle}, notedescription = #{noteDescription} " +
+            "WHERE " +
+            "userid = #{userId}" +
+            "AND " +
+            "noteId = #{noteId}")
+    boolean update(Note note);
+
+
+    /**
      * Delete the Note from the database
      *
      * @param: ID of Note

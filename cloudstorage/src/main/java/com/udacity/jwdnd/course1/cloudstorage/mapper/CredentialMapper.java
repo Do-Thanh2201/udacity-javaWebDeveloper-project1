@@ -50,6 +50,22 @@ public interface CredentialMapper {
     boolean insert(Credential credential);
 
     /**
+     * Update the Credential to the database
+     *
+     * @param: Credential
+     *
+     * @return true if update successfully
+     */
+    @Update("UPDATE CREDENTIALS " +
+            "SET " +
+            "url = #{url}, username = #{username},key = #{key}, password = #{password}" +
+            "WHERE " +
+            "userid = #{userId}" +
+            "AND " +
+            "credentialId = #{credentialId}")
+    boolean update(Credential credential);
+
+    /**
      * Delete the Credential from the database
      *
      * @param: ID of Credential

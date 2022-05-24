@@ -69,6 +69,18 @@ public class NoteService {
     };
 
     /**
+     * Edit the Note to the database
+     *
+     * @param: Note
+     *
+     * @return true if insert successfully
+     */
+    public boolean edit(Note note) {
+        return noteMapper.update(note);
+    };
+
+
+    /**
      * Set value for Note
      *
      * @param: Title of Note

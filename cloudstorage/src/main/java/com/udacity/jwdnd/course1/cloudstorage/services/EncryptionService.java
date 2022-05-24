@@ -8,9 +8,14 @@ import org.springframework.stereotype.Service;
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.charset.Charset;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
+import java.util.Random;
 
 @Service
 public class EncryptionService {
@@ -46,5 +51,25 @@ public class EncryptionService {
         }
 
         return new String(decryptedValue);
+    }
+
+    public String keyAutoGen()
+    {
+        byte[] array = new byte[7]; // length is bounded by 7
+        new Random().nextBytes(array);
+
+        // Key auto generate
+        return new String(array, Charset.forName("UTF-8"));
+    }
+
+    public boolean isValidURL(String url) {
+
+        try {
+            new URL(url).toURI();
+        } catch (MalformedURLException | URISyntaxException e) {
+            return false;
+        }
+
+        return true;
     }
 }

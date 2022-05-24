@@ -1,10 +1,12 @@
 package com.udacity.jwdnd.course1.cloudstorage.services;
 
+import com.udacity.jwdnd.course1.cloudstorage.dto.CredentialDTO;
 import com.udacity.jwdnd.course1.cloudstorage.mapper.CredentialMapper;
 import com.udacity.jwdnd.course1.cloudstorage.model.Credential;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * CredentialService
@@ -27,8 +29,13 @@ public class CredentialService {
     /** credentialMapper */
     private CredentialMapper credentialMapper;
 
-    public CredentialService(CredentialMapper credentialMapper) {
+    /** encryptionService */
+    private EncryptionService encryptionService;
+
+    public CredentialService(CredentialMapper credentialMapper, EncryptionService encryptionService) {
+
         this.credentialMapper = credentialMapper;
+        this.encryptionService = encryptionService;
     }
 
     //=====================================================
@@ -54,8 +61,11 @@ public class CredentialService {
      *
      * @return List of Credential
      */
-    public List<Credential> getListCredential(int userId) {
-        return credentialMapper.getListCredential(userId);
+    public List<CredentialDTO> getListCredential(int userId) {
+
+        List<Credential> credentials = credentialMapper.getListCredential(userId);
+
+        return  credentials.stream().map(this::toCredentialDTO).collect(Collectors.toList());
     };
 
     /**
@@ -68,7 +78,16 @@ public class CredentialService {
     public boolean insert(Credential credential) {
         return credentialMapper.insert(credential);
     };
-
+    /**
+     * Update the Credential to the database
+     *
+     * @param: Credential
+     *
+     * @return true if insert successfully
+     */
+    public boolean update(Credential credential) {
+        return credentialMapper.update(credential);
+    };
     /**
      * Set value for Credential
      *
@@ -80,13 +99,13 @@ public class CredentialService {
      *
      * @return Credential
      */
-    public Credential setToCredential(String url, String username, String key, String password, int userId) {
+    public Credential setToCredential(String url, String username, String decryptPassword, int userId) {
         Credential credential = new Credential();
 
         credential.setUrl(url);
         credential.setUsername(username);
-        credential.setKey(key);
-        credential.setPassword(password);
+        credential.setKey(encryptionService.keyAutoGen());
+        credential.setPassword(encryptionService.encryptValue(decryptPassword, credential.getKey()));
         credential.setUserId(userId);
 
         return credential;
@@ -107,4 +126,24 @@ public class CredentialService {
     //                                      INTERNAL METHOD
     //                                             ========
 
+    /**
+     * convert from Credential to CredentialDTO
+     *
+     * @param: credential
+     *
+     * @return credentialDTO
+     */
+    private CredentialDTO toCredentialDTO (Credential credential) {
+
+        CredentialDTO credentialDTO = new CredentialDTO();
+
+        credentialDTO.setCredentialId(credential.getCredentialId());
+        credentialDTO.setUrl(credential.getUrl());
+        credentialDTO.setUsername(credential.getUsername());
+        credentialDTO.setEncryptPassword(credentialDTO.getEncryptPassword());
+        credentialDTO.setDecryptPassword(encryptionService.decryptValue(
+                                                    credential.getPassword(), credential.getKey()));
+
+        return credentialDTO;
+    }
 }

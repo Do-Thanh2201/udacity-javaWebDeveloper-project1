@@ -96,11 +96,15 @@ public class FileController {
             return "redirect:/home";
         }
 
-        Integer userId = userService.getUserID();
-        if (userId == null) {
-
+        Integer userId;
+        try {
+            userId = userService.getUserID();
+        }
+        catch (Exception e) {
+            redirectAttrs.addFlashAttribute("message", UserService.NOT_EXIST_USER_MESSAGE);
             return "redirect:/login";
         }
+
         // Save the file on the database
         try {
 
