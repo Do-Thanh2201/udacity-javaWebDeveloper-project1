@@ -140,7 +140,7 @@ public class CredentialService {
         credentialDTO.setCredentialId(credential.getCredentialId());
         credentialDTO.setUrl(credential.getUrl());
         credentialDTO.setUsername(credential.getUsername());
-        credentialDTO.setEncryptPassword(credentialDTO.getEncryptPassword());
+        credentialDTO.setEncryptPassword(credential.getPassword());
         credentialDTO.setDecryptPassword(encryptionService.decryptValue(credential.getPassword(), credential.getKey()));
 
         return credentialDTO;

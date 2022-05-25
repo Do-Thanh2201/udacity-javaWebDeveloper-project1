@@ -160,8 +160,10 @@ public class FileController {
 
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(file.getContentType()))
-                /*replace "attachment" with "inline" if you want another browser tab to be opened to view file
-                instead of directly downloading files.*/
+
+                // "attachment": directly downloading files.
+                // "inline": another browser tab to be opened to view file
+
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\""+filename+"\"")
                 .body(file.getFileData());
     }
