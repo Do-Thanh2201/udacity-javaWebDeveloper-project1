@@ -44,6 +44,16 @@ public class FileService {
     public File getByFilename(String fileName) {
         return fileMapper.getByFileName(fileName);
     };
+    /**
+     * Get file by fileId
+     *
+     * @param: name of file
+     *
+     * @return File
+     */
+    public File getByFileId(int fileId) {
+        return fileMapper.getByFileId(fileId);
+    };
 
     /**
      * Get the list of file

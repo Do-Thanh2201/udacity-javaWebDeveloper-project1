@@ -3,7 +3,9 @@ package com.udacity.jwdnd.course1.cloudstorage.controller;
 import com.udacity.jwdnd.course1.cloudstorage.model.File;
 import com.udacity.jwdnd.course1.cloudstorage.services.FileService;
 import com.udacity.jwdnd.course1.cloudstorage.services.UserService;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -150,6 +152,18 @@ public class FileController {
         redirectAttrs.addFlashAttribute("message", DELETE_FILE_SUCCESS_MESSAGE);
 
         return "redirect:/home";
+    }
+    @GetMapping("/view")
+    public ResponseEntity viewFile(@RequestParam("fileId") int fileId) {
+        File file = fileService.getByFileId(fileId);
+        String filename = file.getFileName();
+
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(file.getContentType()))
+                /*replace "attachment" with "inline" if you want another browser tab to be opened to view file
+                instead of directly downloading files.*/
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\""+filename+"\"")
+                .body(file.getFileData());
     }
 
     //=====================================================

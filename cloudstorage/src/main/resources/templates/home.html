@@ -72,7 +72,7 @@
                                     </tr>
                                     <tr th:each="file : ${fileList}">
                                         <td>
-                                            <a target="_blank" class="btn btn-success">View</a>
+                                            <a target="_blank" class="btn btn-success" th:href="@{/file/view/(fileId=${file.fileId})}">View</a>
                                             <a th:href="@{/file/delete/(fileId=${file.fileId})}"  class="btn btn-danger">Delete</a>
                                         </td>
                                         <th scope="row">
@@ -198,7 +198,7 @@
 
                                 <tr th:each="credential : ${credentialList}">
                                     <td>
-                                        <button th:attr="onclick=|showCredentialModal('${credential.credentialId}','${credential.url}','${credential.username}','${credential.encryptPassword}','${credentialDto.decryptPassword}')|"
+                                        <button th:attr="onclick=|showCredentialModal('${credential.credentialId}','${credential.url}','${credential.username}','${credential.encryptPassword}','${credential.decryptPassword}')|"
                                                 type="button" class="btn btn-success">
                                             Edit
                                         </button>
@@ -216,7 +216,7 @@
 
                                     <!-- Show Credential encrypted Password-->
                                     <td>
-                                        <span th:text="${credential.password}"></span>
+                                        <span th:text="${credential.encryptPassword}"></span>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -238,6 +238,7 @@
                                     <div class="modal-body">
                                         <form action="#" th:action="@{'/credential'}" th:object="${credential}" method="POST">
                                             <input type="hidden" name="credentialId" id="credential-id">
+                                            <input type="hidden" name= "encryptPassword" class="form-control" id="credential-encryptPassword" maxlength="30" required>
                                             <div class="form-group">
                                                 <label for="note-title" class="col-form-label">URL</label>
                                                 <input type="text" name= "url" class="form-control" id="credential-url" maxlength="100" required>
@@ -248,7 +249,6 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="note-title" class="col-form-label">Password</label>
-                                                <input type="hidden" name= "encryptPassword" class="form-control" id="credential-encryptPassword" maxlength="30" required>
                                                 <input type="text" name= "decryptPassword" class="form-control" id="credential-decryptPassword" maxlength="30" required>
 
                                             </div>

@@ -143,7 +143,7 @@ public class CredentialController {
      */
     public void editCredential(CredentialDTO credentialDTO, int userId, RedirectAttributes redirectAttrs) {
 
-        Credential credential = credentialService.setToCredential
+        Credential credential = credentialService.toCredential
                 (credentialDTO.getUrl(), credentialDTO.getUsername(), credentialDTO.getDecryptPassword(), userId);
         credential.setCredentialId(credentialDTO.getCredentialId());
 
@@ -166,7 +166,7 @@ public class CredentialController {
     public void createCredential(CredentialDTO credentialDTO, int userId, RedirectAttributes redirectAttrs) {
 
 
-        Credential credential = credentialService.setToCredential
+        Credential credential = credentialService.toCredential
                 (credentialDTO.getUrl(), credentialDTO.getUsername(), credentialDTO.getDecryptPassword(), userId);
 
         if (!credentialService.insert(credential)) {

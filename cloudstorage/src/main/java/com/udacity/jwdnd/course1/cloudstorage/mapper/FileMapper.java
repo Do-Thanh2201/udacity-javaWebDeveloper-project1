@@ -27,6 +27,16 @@ public interface FileMapper {
     File getByFileName(String fileName);
 
     /**
+     * Get file by fileId
+     *
+     * @param: Name of file
+     *
+     * @return File
+     */
+    @Select("SELECT * FROM FILES WHERE fileId = #{fileId}")
+    File getByFileId(int fileId);
+
+    /**
      * Get the list of file
      *
      * @param: ID of user

@@ -99,7 +99,7 @@ public class CredentialService {
      *
      * @return Credential
      */
-    public Credential setToCredential(String url, String username, String decryptPassword, int userId) {
+    public Credential toCredential(String url, String username, String decryptPassword, int userId) {
         Credential credential = new Credential();
 
         credential.setUrl(url);
@@ -141,8 +141,7 @@ public class CredentialService {
         credentialDTO.setUrl(credential.getUrl());
         credentialDTO.setUsername(credential.getUsername());
         credentialDTO.setEncryptPassword(credentialDTO.getEncryptPassword());
-        credentialDTO.setDecryptPassword(encryptionService.decryptValue(
-                                                    credential.getPassword(), credential.getKey()));
+        credentialDTO.setDecryptPassword(encryptionService.decryptValue(credential.getPassword(), credential.getKey()));
 
         return credentialDTO;
     }
