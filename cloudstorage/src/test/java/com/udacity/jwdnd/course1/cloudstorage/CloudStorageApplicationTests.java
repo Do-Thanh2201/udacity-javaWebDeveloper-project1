@@ -24,6 +24,7 @@ class CloudStorageApplicationTests {
 	@BeforeAll
 	static void beforeAll() {
 		WebDriverManager.chromedriver().setup();
+		System.setProperty("webdriver.chrome.driver", "src\\main\\resources\\static\\drivers\\chromedriver.exe");
 	}
 
 	@BeforeEach
