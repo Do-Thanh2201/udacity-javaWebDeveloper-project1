@@ -112,12 +112,12 @@
                                 <tr th:each="note : ${noteList}">
                                     <td>
                                         <!-- Edit then update the Note to database-->
-                                        <button th:attr="onclick=|showNoteModal('${note.noteId}','${note.noteTitle}','${note.noteDescription}')|"
+                                        <button th:id="'edit'+${note.noteId}" th:attr="onclick=|showNoteModal('${note.noteId}','${note.noteTitle}','${note.noteDescription}')|"
                                                 type="button" class="btn btn-success">
                                             Edit
                                         </button>
 
-                                        <a th:href="@{/note/delete/(noteId=${note.noteId})}" class="btn btn-danger">Delete</a>
+                                        <a th:id="'delete'+${note.noteId}" th:href="@{/note/delete/(noteId=${note.noteId})}" class="btn btn-danger">Delete</a>
                                     </td>
                                     <th scope="row">
                                         <span th:text="${note.noteTitle}"></span>
@@ -199,24 +199,26 @@
                                 <tr th:each="credential : ${credentialList}">
                                     <td>
                                         <button th:attr="onclick=|showCredentialModal('${credential.credentialId}','${credential.url}','${credential.username}','${credential.encryptPassword}','${credential.decryptPassword}')|"
-                                                type="button" class="btn btn-success">
+                                                type="button" class="btn btn-success" th:id="'upd'+${credential.credentialId}" >
                                             Edit
                                         </button>
-                                        <a th:href="@{/credential/delete/(credentialId=${credential.credentialId})}" class="btn btn-danger">Delete</a>
+                                        <a th:id="'deleteCrd'+${credential.credentialId}" th:href="@{/credential/delete/(credentialId=${credential.credentialId})}" class="btn btn-danger">
+                                            Delete
+                                        </a>
                                     </td>
                                     <!-- Show URL-->
                                     <th scope="row">
-                                        <span th:text="${credential.url}"></span>
+                                        <span class="credentialId" th:text="${credential.url}"></span>
                                     </th>
 
                                     <!-- Show Credential Username-->
                                     <td>
-                                        <span th:text="${credential.username}"></span>
+                                        <span class="credentialUsername" th:text="${credential.username}"></span>
                                     </td>
 
                                     <!-- Show Credential encrypted Password-->
                                     <td>
-                                        <span th:text="${credential.encryptPassword}"></span>
+                                        <span class="credentialPassword" th:text="${credential.encryptPassword}"></span>
                                     </td>
                                 </tr>
                                 </tbody>
