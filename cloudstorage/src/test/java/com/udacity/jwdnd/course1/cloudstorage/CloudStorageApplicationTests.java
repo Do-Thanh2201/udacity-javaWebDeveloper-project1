@@ -348,6 +348,42 @@ public void getLoginPage() {
 		Assertions.assertTrue(driver.findElement(By.id("message-success")).getText().contains("You successfully delete the Credential!"));
 	}
 
+	//=====================================================
+	//                                   		 FILE TESTS
+	//                                             ========
+	@Test
+	public void testFile() throws InterruptedException {
+		// Create a test account
+		doMockSignUp("uploadFile","Test","test","123");
+		doLogIn("test", "123");
+
+		// Try to upload a file
+		WebDriverWait webDriverWait = new WebDriverWait(driver, 2);
+		String fileName = "image.jpg";
+
+		webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.id("fileUpload")));
+		WebElement fileSelectButton = driver.findElement(By.id("fileUpload"));
+		fileSelectButton.sendKeys(new File(fileName).getAbsolutePath());
+
+		// Upload file
+		WebElement uploadButton = driver.findElement(By.id("uploadButton"));
+		uploadButton.click();
+
+		Thread.sleep(500);
+
+		Assertions.assertTrue(driver.findElement(By.id("message-success")).getText().contains("You successfully upload file: "+ fileName + "!"));
+		Thread.sleep(1000);
+
+		// delete file
+		WebElement deleteButton = driver.findElement(By.className("delete-file"));
+		deleteButton.click();
+
+		Thread.sleep(500);
+
+		Assertions.assertTrue(driver.findElement(By.id("message-success")).getText().contains("You successfully delete file!"));
+
+	}
+
 
 	//=====================================================
 	//                                 	   		NOTE TESTS
