@@ -43,6 +43,16 @@ public class HomePage {
     @FindBy(id = "nav-credentials-tab")
     private WebElement credsTabButton;
 
+    @FindBy(className = "edit-credential")
+    private WebElement editFirstCredentialButton;
+    @FindBy(className = "delete-credential")
+    private WebElement deleteFirstCredentialButton;
+
+    @FindBy(className = "edit-note")
+    private WebElement editFirstNoteButton;
+
+    @FindBy(className = "delete-note")
+    private WebElement deleteFirstNoteButton;
     private WebDriver driver;
 
     public HomePage(WebDriver driver) {
@@ -62,16 +72,6 @@ public class HomePage {
     public void selectCredentialsWindow() throws InterruptedException {
         Thread.sleep(500);
         credsTabButton.click();
-    }
-
-    public String getMessage() {
-        try {
-            WebElement e = driver.findElement(By.id("message"));
-            String msg = e.getText();
-            return msg;
-        } catch (Exception e) {
-            return null;
-        }
     }
 
     public void addNote(String title, String desc) throws InterruptedException {
@@ -107,18 +107,9 @@ public class HomePage {
         return noteList;
     }
 
-    public boolean notePresent(Note n, List<Note> notes) {
-        for (Note note : notes) {
-            if (note.getNoteTitle().equals(n.getNoteTitle())
-                    && note.getNoteDescription().equals(n.getNoteDescription()))
-                return true;
-        }
-        return false;
-    }
+    public void updateNote(/*int noteid,*/ String title, String desc) throws InterruptedException {
 
-    public void updateNote(int noteid, String title, String desc) throws InterruptedException {
-        WebElement editNoteButton = driver.findElement(By.id("edit" + noteid));
-        editNoteButton.click();
+        editFirstNoteButton.click();
         Thread.sleep(500);
         noteTitle.clear();
         noteTitle.sendKeys(title);
@@ -127,17 +118,12 @@ public class HomePage {
         noteTitle.submit();
     }
 
-    public Integer getNoteId(String notetitle, String notedescription, List<Note> notes) {
-        for (Note n : notes)
-            if (n.getNoteTitle().equals(notetitle) && n.getNoteTitle().equals(notedescription))
-                return n.getNoteId();
-        return null;
-    }
 
-    public void deleteNote(Integer id) throws InterruptedException {
-        WebElement delNoteButton = driver.findElement(By.id("delete" + id));
-        delNoteButton.click();
-        Thread.sleep(500);
+
+    public void deleteNote() {
+
+        deleteFirstNoteButton.click();
+
     }
 
 
@@ -151,45 +137,8 @@ public class HomePage {
         credUrl.submit();
     }
 
-    public List<Credential> getCreds() throws InterruptedException {
-        Thread.sleep(500);
-
-        List<WebElement> ids = driver.findElements(By.className("credentialId"));
-        List<WebElement> urls = driver.findElements(By.className("credentialUrl"));
-        List<WebElement> usernames = driver.findElements(By.className("credentialUsername"));
-        List<WebElement> passwords = driver.findElements(By.className("credentialPassword"));
-        List<Credential> creds = new ArrayList<>();
-        for (int i = 0; i < urls.size(); ++i) {
-            try {
-                Integer id = Integer.parseInt(ids.get(i).getAttribute("value"));
-                String url = urls.get(i).getText();
-                String username = usernames.get(i).getText();
-                String password = passwords.get(i).getAttribute("value");
-                Credential cred = new Credential();
-                cred.setCredentialId(id);
-                cred.setUrl(url);
-                cred.setUsername(username);
-                cred.setPassword(password);
-                creds.add(cred);
-            } catch (Exception e) {
-
-            }
-        }
-        return creds;
-    }
-
-    public boolean credPresent(Credential c, List<Credential> creds) {
-        for (Credential cred : creds) {
-            if (cred.getUrl().equals(c.getUrl())
-                    && cred.getUsername().equals(c.getUsername()) && cred.getPassword().equals(c.getPassword()))
-                return true;
-        }
-        return false;
-    }
-
-    public void updateCred(int credId, String url, String username, String password) throws InterruptedException {
-        WebElement editCredButton = driver.findElement(By.id("upd" + credId));
-        editCredButton.click();
+    public void updateCred( String url, String username, String password) throws InterruptedException {
+        editFirstCredentialButton.click();
         Thread.sleep(500);
         credUrl.clear();
         credUrl.sendKeys(url);
@@ -200,17 +149,8 @@ public class HomePage {
         credUrl.submit();
     }
 
-    public Integer getCredId(String url, String username, String password, List<Credential> creds) {
-        for (Credential cred : creds)
-            if (cred.getUrl().equals(url)
-                    && cred.getUsername().equals(username) && cred.getPassword().equals(password))
-                return cred.getCredentialId();
-        return null;
-    }
+    public void deleteCred(/*Integer id*/) {
 
-    public void deleteCred(Integer id) throws InterruptedException {
-        WebElement delCredButton = driver.findElement(By.id("deleteCrd" + id));
-        delCredButton.click();
-        Thread.sleep(500);
+        deleteFirstCredentialButton.click();
     }
 }

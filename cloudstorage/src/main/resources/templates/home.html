@@ -16,12 +16,12 @@
              ================================================*/-->
             <div id="logoutDiv">
                 <form action="#" method="POST" th:action="@{'/logout'}">
-                    <button type="submit" class="btn btn-secondary float-right">Logout</button>
+                    <button th:id = "logout" type="submit" class="btn btn-secondary float-right">Logout</button>
                 </form>
             </div>
 
             <!-- Message is send from FileController/ NoteController/ CredentialController -->
-            <p th:text="${message}" th:if="${message ne null}" class="alert alert-primary"></p>
+            <p id = "message-success" th:text="${message}" th:if="${message ne null}" class="alert alert-primary"></p>
 
             <div id="contentDiv" style="clear: right;">
                 <nav style="clear: right;">
@@ -90,7 +90,7 @@
                     <div class="tab-pane fade" id="nav-notes" role="tabpanel" aria-labelledby="nav-notes-tab">
 
                         <!-- Create a new note -->
-                        <button style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showNoteModal()">
+                        <button id = "addNoteButton" style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showNoteModal()">
                             + Add a New Note
                         </button>
 
@@ -113,11 +113,11 @@
                                     <td>
                                         <!-- Edit then update the Note to database-->
                                         <button th:id="'edit'+${note.noteId}" th:attr="onclick=|showNoteModal('${note.noteId}','${note.noteTitle}','${note.noteDescription}')|"
-                                                type="button" class="btn btn-success">
+                                                type="button" class="btn btn-success edit-note">
                                             Edit
                                         </button>
 
-                                        <a th:id="'delete'+${note.noteId}" th:href="@{/note/delete/(noteId=${note.noteId})}" class="btn btn-danger">Delete</a>
+                                        <a th:id="'delete'+${note.noteId}" th:href="@{/note/delete/(noteId=${note.noteId})}" class="btn btn-danger delete-note">Delete</a>
                                     </td>
                                     <th scope="row">
                                         <span th:text="${note.noteTitle}"></span>
@@ -175,7 +175,7 @@
                     =======================================================*/-->
 
                     <div class="tab-pane fade" id="nav-credentials" role="tabpanel" aria-labelledby="nav-credentials-tab">
-                        <button style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showCredentialModal()">
+                        <button id = "addCredentialButton" style="margin: 0.25em;" type="button" class="btn btn-info float-right" onclick="showCredentialModal()">
                             + Add a New Credential
                         </button>
 
@@ -199,16 +199,18 @@
                                 <tr th:each="credential : ${credentialList}">
                                     <td>
                                         <button th:attr="onclick=|showCredentialModal('${credential.credentialId}','${credential.url}','${credential.username}','${credential.encryptPassword}','${credential.decryptPassword}')|"
-                                                type="button" class="btn btn-success" th:id="'upd'+${credential.credentialId}" >
+                                                type="button" class="btn btn-success edit-credential" th:id="'upd'+${credential.credentialId}" >
                                             Edit
                                         </button>
-                                        <a th:id="'deleteCrd'+${credential.credentialId}" th:href="@{/credential/delete/(credentialId=${credential.credentialId})}" class="btn btn-danger">
+                                        <a th:id="'deleteCrd'+${credential.credentialId}" th:href="@{/credential/delete/(credentialId=${credential.credentialId})}"
+                                           class="btn btn-danger delete-credential">
                                             Delete
                                         </a>
+                                        <span type="hidden" class = "credentialId" th:value="${credential.credentialId}" ></span>
                                     </td>
                                     <!-- Show URL-->
                                     <th scope="row">
-                                        <span class="credentialId" th:text="${credential.url}"></span>
+                                        <span class="credentialUrl" th:text="${credential.url}"></span>
                                     </th>
 
                                     <!-- Show Credential Username-->
@@ -218,7 +220,7 @@
 
                                     <!-- Show Credential encrypted Password-->
                                     <td>
-                                        <span class="credentialPassword" th:text="${credential.encryptPassword}"></span>
+                                        <span th:text="${credential.encryptPassword}"></span>
                                     </td>
                                 </tr>
                                 </tbody>
@@ -251,7 +253,7 @@
                                             </div>
                                             <div class="form-group">
                                                 <label for="note-title" class="col-form-label">Password</label>
-                                                <input type="text" name= "decryptPassword" class="form-control" id="credential-decryptPassword" maxlength="30" required>
+                                                <input th:id="credential-password" type="text" name= "decryptPassword" class="form-control" id="credential-decryptPassword" maxlength="30" required>
 
                                             </div>
                                             <button id="credentialSubmit" type="submit" class="d-none"></button>
