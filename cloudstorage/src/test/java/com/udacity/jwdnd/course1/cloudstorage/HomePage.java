@@ -1,6 +1,5 @@
 package com.udacity.jwdnd.course1.cloudstorage;
 
-import com.udacity.jwdnd.course1.cloudstorage.model.Credential;
 import com.udacity.jwdnd.course1.cloudstorage.model.Note;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -37,7 +36,7 @@ public class HomePage {
     @FindBy(id="credential-username")
     private WebElement credUsername;
 
-    @FindBy(id="credential-password")
+    @FindBy(id="credential-decryptPassword")
     private WebElement credPassword;
 
     @FindBy(id = "nav-credentials-tab")
@@ -149,7 +148,7 @@ public class HomePage {
         credUrl.submit();
     }
 
-    public void deleteCred(/*Integer id*/) {
+    public void deleteCred() {
 
         deleteFirstCredentialButton.click();
     }

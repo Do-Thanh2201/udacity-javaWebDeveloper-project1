@@ -21,12 +21,17 @@ public class NoteController {
     //=====================================================
     //                                             CONSTANT
     //                                             ========
+    /** Max lenghth note description */
+    private static final int MAX_LENGTH                        = 200;
 
     /** Empty Uploaded Note message */
     private static final String EMPTY_NOTE_MESSAGE             = "Please fill a note to save.";
 
+    /** Too long Note error message */
+    private static final String TOO_LONG_NOTE_MESSAGE          = "Note NoteDescription is too long";
+
     /** Create Note successfully message */
-    private static final String CREATE_NOTE_SUCCESS_MESSAGE = "You successfully create the note!";
+    private static final String CREATE_NOTE_SUCCESS_MESSAGE    = "You successfully create the note!";
 
     /** Update Note successfully message */
     private static final String UPDATE_NOTE_SUCCESS_MESSAGE    = "You successfully update the note!";
@@ -35,7 +40,7 @@ public class NoteController {
     private static final String DELETE_NOTE_SUCCESS_MESSAGE    = "You successfully delete the note!";
 
     /** Create note error message */
-    private static final String CREATE_NOTE_ERROR_MESSAGE = "An error occurred while Create the note!";
+    private static final String CREATE_NOTE_ERROR_MESSAGE      = "An error occurred while Create the note!";
 
     /** Update note error message */
     private static final String UPDATE_NOTE_ERROR_MESSAGE      = "An error occurred while updating the note!";
@@ -89,7 +94,10 @@ public class NoteController {
             redirectAttrs.addFlashAttribute("message", EMPTY_NOTE_MESSAGE);
             return "redirect:/home";
         }
-
+        if (noteDTO.getNoteDescription().length() > MAX_LENGTH) {
+            redirectAttrs.addFlashAttribute("message", TOO_LONG_NOTE_MESSAGE);
+            return "redirect:/home";
+        }
         // Get userId
 
         Integer userId;
